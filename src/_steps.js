@@ -7,5 +7,7 @@
 5* export defult firebase app
 6* import app firbase.init.js into your app.js
 7* import getAuth from firebase/auth and create auth = getAuth(app)
-8* trun on googgle authentication 
+8* trun on googgle authentication (firebase > authentication > enable google sign in)
+9* create google provider 
+10* sign in with pop up 
 */
