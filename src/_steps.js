@@ -10,5 +10,6 @@
 7*  import app firbase.init.js into your app.js
 8* trun on googgle authentication (firebase > authentication > enable google sign in)
 9* create google provider 
-10* sign in with pop up 
+10* sign in with popup and pass auth and provider 
+11* handdle  .then (if sucessful) and  .catch error(if error )
 */
