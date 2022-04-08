@@ -1,4 +1,4 @@
-import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { FacebookAuthProvider, getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import React, { useState } from 'react';
 import app from '../../firebase.init';
 
@@ -8,12 +8,18 @@ import app from '../../firebase.init';
 const auth = getAuth(app);
 
 
+
+// public function 
 const GoogleGithubAuth = () => {
+
+
+
     const [userInfo, setUserInfo] = useState({});
     console.log(userInfo);
     const { displayName, photoURL } = userInfo
     const googleProvider = new GoogleAuthProvider();
     const githubProvider = new GithubAuthProvider();
+    const facebookProvider = new FacebookAuthProvider();
 
     // google provider 
     const handdleGoogleSingIn = () => {
@@ -51,15 +57,31 @@ const GoogleGithubAuth = () => {
                 console.log(error);
             })
     }
+
+    // handle Facebook Provider
+    const handleFacebookProvider = () => {
+        signInWithPopup(auth, facebookProvider)
+            .then(result => {
+                const getFbUser = result.user;
+                setUserInfo(getFbUser)
+                console.log(getFbUser);
+
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
+    }
+
     return (
-        <div className='my-4 text-center'>
+        <div className='my-5 text-center'>
             {
                 displayName ?
-                    <button className='btn btn-outline-info' onClick={handdleGoogleSingOut}> Sign Out</button>
+                    <button className='btn btn-outline-info mb-3' onClick={handdleGoogleSingOut}> Sign Out</button>
                     :
                     <>
-                        <button className='btn btn-outline-info me-3' onClick={handdleGoogleSingIn}>Google sign in</button>
-                        <button className='btn btn-outline-info' onClick={handleGithubProvider}> Github login</button>
+                        <button className='btn btn-outline-info ' onClick={handdleGoogleSingIn}>Google sign in</button>
+                        <button className='btn btn-outline-info m-4' onClick={handleFacebookProvider}> Facebook sign in</button>
+                        <button className='btn btn-outline-info ' onClick={handleGithubProvider}> Github sign in</button>
                     </>
             }
 
