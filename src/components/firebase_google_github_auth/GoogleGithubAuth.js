@@ -52,14 +52,14 @@ const GoogleGithubAuth = () => {
             })
     }
     return (
-        <div>
+        <div className='my-4'>
             {
                 displayName ?
-                    <button onClick={handdleGoogleSingOut}>Google sign Out</button>
+                    <button className='btn btn-outline-info' onClick={handdleGoogleSingOut}> Sign Out</button>
                     :
                     <>
-                        <button onClick={handdleGoogleSingIn}>Google sign in</button>
-                        <button onClick={handleGithubProvider}> Github login</button>
+                        <button className='btn btn-outline-info me-3' onClick={handdleGoogleSingIn}>Google sign in</button>
+                        <button className='btn btn-outline-info' onClick={handleGithubProvider}> Github login</button>
                     </>
             }
 
