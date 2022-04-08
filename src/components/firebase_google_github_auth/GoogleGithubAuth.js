@@ -52,7 +52,7 @@ const GoogleGithubAuth = () => {
             })
     }
     return (
-        <div className='my-4'>
+        <div className='my-4 text-center'>
             {
                 displayName ?
                     <button className='btn btn-outline-info' onClick={handdleGoogleSingOut}> Sign Out</button>

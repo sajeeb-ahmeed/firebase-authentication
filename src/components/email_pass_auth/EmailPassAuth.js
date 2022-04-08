@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import app from '../../firebase.init';
@@ -7,8 +7,9 @@ const auth = getAuth(app)
 const EmailPassAuth = () => {
 
     const [specialCharPass, setSpecialCharPass] = useState('')
+    const [error, setError] = useState('')
     const [validated, setValidated] = useState(false);
-
+    const [registered, setRegistered] = useState(false)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
     // email 
@@ -18,6 +19,11 @@ const EmailPassAuth = () => {
     // password 
     const handlePasswordBlur = e => {
         setPassword(e.target.value);
+    }
+
+    // registered 
+    const handleRegistered = (event) => {
+        setRegistered(event.target.checked)
     }
     // from submit 
 
@@ -31,24 +37,45 @@ const EmailPassAuth = () => {
 
         setValidated(true);
 
-        event.preventDefault();
 
+        //check pass validitaion
         if (!/(?=.*[!#$%&?@^ "])/.test(password)) {
 
-            return setSpecialCharPass('Please use a special character ')
+            setSpecialCharPass('Please use a special character ');
+            return;
         }
-        // create user 
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                console.log(user);
-            })
-            .catch((error) => {
 
-                const errorMessage = error.message;
-                console.log(errorMessage);
-            });
+        if (registered) {
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log(user);
+                })
+                .catch((error) => {
+                    // const errorCode = error.code;
+                    const errorMessage = error.message;
+                    setError(errorMessage);
+                });
+        }
+        else {
+            // create user 
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log(user);
+                    setEmail('');
+                    setPassword('')
+                })
+                .catch((error) => {
+
+                    const errorMessage = error.message;
+                    setError(errorMessage);
+                });
+
+        }
+        event.preventDefault();
 
     }
 
@@ -58,7 +85,10 @@ const EmailPassAuth = () => {
 
 
             <div className='mt-4'>
-                <h1 className='text-center text-info my-3'>Please Register</h1>
+                <h1 className='text-center text-info my-3'>
+
+                    Please {registered ? 'Login !!' : ' Register !!'}
+                </h1>
                 <Form noValidate validated={validated} className='w-50 mx-auto' onSubmit={formSubmitHandle}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
@@ -80,11 +110,18 @@ const EmailPassAuth = () => {
                         </Form.Control.Feedback>
 
                         <p className='text-danger'>{specialCharPass} </p>
+                        <p className='text-danger'>{error} </p>
+
+                    </Form.Group>
+                    <Form.Group className="mb-3 text-start" controlId="formBasicCheckbox">
+                        {
+                            registered ? <Form.Check className='text-success fw-bold' onChange={handleRegistered} type="checkbox" label="Already Registered ?" /> : <Form.Check className='text-danger fw-bold' onChange={handleRegistered} type="checkbox" label="Already Registered ?" />
+                        }
 
                     </Form.Group>
 
                     <Button className='btn btn-outline-info' variant="dark" type="submit">
-                        Submit
+                        {registered ? 'Login ' : 'Register'}
                     </Button>
                 </Form>
             </div>
